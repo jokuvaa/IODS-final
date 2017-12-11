@@ -1,0 +1,14 @@
+---
+title: "index.Rmd"
+author: "Mika Vehka"
+date: "11 joulukuuta 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Do final assignment here.
+
+Do final assignment here. 
