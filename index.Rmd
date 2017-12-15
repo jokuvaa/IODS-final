@@ -1,7 +1,8 @@
 ---
 title: "index.Rmd"
-author: "Mika Vehka"
+author: "Mika Tapio Vehka"
 date: "11 joulukuuta 2017"
+email: "mika.vehka@helsinki.fi"
 output: html_document
 ---
 
@@ -9,6 +10,156 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Do final assignment here.
+# Regression analysis of criminality
 
-Do final assignment here. 
+## Abstract
+
+In the following analysis I will study criminality and it's causes. As a statistical method I will use linear regression analysis. According to the analysis, proportion of non-retail business acres, distances to employment centres, property-tax rate, proportion of blacks and lower status of the population seem to have a statistically significant relationship with per capita crime rate. However, what is more interesting is that many things do not, counter-intuitively or contrary to conventional wisdom, have a relationship with criminality (for example pupil-teacher ratio does not seem to affect criminality according to Boston data. However, according to the regression diagnostics, linear model does not seem to be a perfect one with the data at hand. For this reason, the results of the analysis must be interpreted with caution. 
+
+
+
+## Research question and hypothesis
+
+The aim of my final work is to study criminality and it's causes. I will use Boston data from the MASS package in R. I will study the following hypothesis:
+
+Per capita crime rate by town is affected by the folllowing environment and population related variables:
+
+1. Proportion of non-retail business acres per town: higher levels cause less criminality (people have other things to do)
+
+2. Nitrogen oxides concentration: higher levels cause more criminality (causes mental problems)
+
+3. Average number of rooms per dwelling: higher levels cause less criminality (is related to living standards)
+
+4. Proportion of owner-occupied units built prior to 1940: higher levels cause more criminality (the same thing)
+
+5. Weighted mean of distances to five Boston employment centres: higher levels cause more criminality (people have less to do away the employment centers)
+
+6. Full-value property-tax rate per \$10,000: higher levels cause more criminality (people have less money to spend)
+
+7. Pupil-teacher ratio by town: higher levels cause more criminality (schools are less effective preventers of crime)
+
+8. Proportion of blacks by town: higher levels cause more criminality (blacks have lower social status)
+
+9. Lower status of the population (percent): higher levels cause more criminality (lower social status affects criminality)
+
+10. Median value of owner-occupied homes: higher levels cause less criminality (high standards of living cause less criminality)
+
+
+
+
+## Data and data wrangling
+
+A link to my data wrangling script:
+
+[link](https://github.com/jokuvaa/IODS-final/blob/master/data_wrangling.R)
+
+The data originates from
+
+Harrison, D. and Rubinfeld, D.L. (1978) Hedonic prices and the demand for clean air. J. Environ. Economics and Management 5, 81-102. 
+
+Belsley D.A., Kuh, E. and Welsch, R.E. (1980) Regression Diagnostics. Identifying Influential Data and Sources of Collinearity. New York: Wiley.
+
+The variables in the data the data wrangling can be seen from the link above. Highly correleted varialbes and variables with extremely small variation have been removed in order to make a functional linear regression. Also a variable that cannot be interpreted meaningfully has been removed. (See the link above for details.)
+
+
+
+
+## Explorations of the variables of interest
+
+```{r,warning=FALSE,echo=FALSE}
+Boston_final <- read.csv("~/GitHub/IODS-final/Boston_final.csv")
+head(Boston_final)
+dim(Boston_final)
+str(Boston_final)
+
+library(GGally)
+ggpairs(Boston_final)
+library(captioner)
+fig_nums<-captioner()
+fig_nums("mydata","Visualization of the variables and their relationships")
+
+```
+
+The data now has 506 observations and 11 data-variables. From the figure we can see that the variables suite for regression analysis much better than in the original Boston data. The variable that can cause problems is the dependent variable crim (per capita crime rate by town) which seems to follow a poisson -distibution. This might cause problems with linear regression. However it is up to the regression diagnostics to determine whether the model works or not (see later). It would be better to use for example poisson regression, but that method is not covered in this course. 
+
+Very few independent variabels seem to be normally distributed, but this souldn't be a problem with linear regression. In this dataset there are no more very highly correlated variables, so regression analysis is suitable. Unfortunately there seems not to be to many interesting correlations at this point, we will have to wait the results from the regression analysis. (For example there could be a relationship between per capita crime rate and proportion of owner-occupied units built prior to 1940.)
+
+
+
+
+## Description of the method
+
+Linear regression is an approach for modeling the relationship between a dependent variable (y) and one or more explanatory variables (x). It can be used for predicting or forecasting or quantifying the strenght of the relationship between y and x. In linear regression it is assumed that the relationship between the target variable and the parameters is linear. The model is found by minimizing the prediction errors that the model makes. There are many assumptions with linear regression (for example it is important that independent variables are not highly correlated).
+
+
+
+
+## Analysis and results
+
+Let's do regression analysis with all the remaining variables.
+
+```{r}
+head(Boston_final)
+fit<-lm(crim~indus+nox+rm+age+dis+tax+ptratio+black+lstat+medv,data=Boston_final)
+summary(fit)
+```
+
+Then lets do the analysis again with only the variables that are statistically significant predictors of criminality. 
+
+```{r}
+fit_2<-lm(crim~indus+dis+tax+black+lstat+medv,data=Boston_final)
+summary(fit_2)
+```
+
+Then let's do the analysis one more time without the one not-significant predictor.
+
+```{r}
+fit_3<-lm(crim~indus+dis+tax+black+lstat,data=Boston_final)
+summary(fit_3)
+```
+
+According to the last model, indus (proportion of non-retail business acres), dis (weighted mean of distances to five Boston employment centres), tax (full-value property-tax rate), black (proportion of blacks) and lstat (lower status of the population) seem to have s statistically significant relationship with crim (per capita crime rate) (p-value better than 0.05). This is very much consistent with the two earlier models.
+
+More non-retail business activities seems to be related to less criminality, which is quite understandable. Distance to employment centers seem to be negatively related, contrary to what was expected. Tax rate seems to be positively related. Contrary to what was expected, the proportion of blacks seems to be negatively related to criminality.This could be due to very small variance of the variable. Lower status of the population seems to be positively related, as expected.
+
+Multiple R-squared of the model is 0.395 and  adjusted R-squared is 0.389 meaning that predictors can explain about 40 % of the variation in criminality which is very high. 
+
+Let's also visualize the outcomes of the linear regression more closely.
+
+```{r,warning=FALSE,echo=FALSE,message=FALSE}
+library(relaimpo)
+library(car)
+library(captioner)
+fig_nums<-captioner()
+fig_nums("Out","A closer look at the relative importance of predictors")
+crlm<-calc.relimp(fit_3,type=c("lmg"),rela=TRUE)
+plot(crlm)
+```
+
+From this picture we can see that the tax variable (full-value property-tax rate) is the most important variable in exlaining criminality, followed by lsta (lower status of the population). The remaining three are about equal importance.
+
+
+
+## Regression diagnostics
+
+```{r,warning=FALSE,echo=FALSE}
+library(captioner)
+fig_nums<-captioner()
+fig_nums("mydata","Regression diagnostics")
+par(mfrow=c(2,2))
+plot(fit_3)
+```
+
+When looking at fitted values vs. residuals one can see whether there are non-linear patterns. In this case there clearly are. When looking at normal Q-Q -plot we can see that whether residuals are normally distributed. In this case they are certainly not enough. Scale location -plot shows whether residuals are spread equally along the ranges of predictors. In this case they are only to a small degree. Residuals vs. leverage -plot shows whether there are influential cases against the regression line. In this case there are a couple.
+
+All in all, we can say that linear regression, according to these diagnosis, is not a perfect medhod in analyzing Boston crime -data. In the future, it would be suitable to use some nonlinear techniques or other methods.  
+
+
+
+
+## Conclusions and discussion
+
+In this exercise a linear regression on Boston criminality data was carried out. The analysis gave many interesting results. For example property-tax rate and distance to employment centres seem to be related to criminality. However, what is more remarkable is that suprisingly many things seem not to be related with criminality. For example average number of rooms per dwelling seems not to be related to criminality. This is counter-intuitive, because the variable is related to living standards, which has been shown to relate to criminality in other settings. The same is true with pupil-teacher ratio, which could be tought to affect population and criminality in many ways. Of course, correlation is not the same thing as causation, but without correlation there cannot possibly be causation.
+
+Because the regression diagnostics showed that linear model is not a perfect method in this case, the results should be viewed with caution. 
+

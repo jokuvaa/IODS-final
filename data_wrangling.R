@@ -25,7 +25,7 @@ str(Boston)
 # nox: nitrogen oxides concentration (parts per 10 million). 
 # rm: average number of rooms per dwelling. 
 # age: proportion of owner-occupied units built prior to 1940. 
-# dis:weighted mean of distances to five Boston employment centres. 
+# dis: weighted mean of distances to five Boston employment centres. 
 # rad: index of accessibility to radial highways. 
 # tax: full-value property-tax rate per \$10,000. 
 # ptratio: pupil-teacher ratio by town. 
