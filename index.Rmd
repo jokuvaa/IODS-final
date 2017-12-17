@@ -2,7 +2,15 @@
 title: "index.Rmd"
 author: "Mika Tapio Vehka (mika.vehka@helsinki.fi)"
 date: "December 17, 2017"
-output: html_document
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+    code_folding: hide
 ---
 
 
@@ -62,7 +70,7 @@ The variables in the data the data wrangling can be seen from the link above. Hi
 
 ## Explorations of the variables of interest
 
-```{r,warning=FALSE,echo=FALSE}
+```{r,warning=FALSE}
 Boston_final <- read.csv("~/GitHub/IODS-final/Boston_final.csv")
 head(Boston_final)
 dim(Boston_final)
@@ -116,13 +124,13 @@ summary(fit_3)
 
 According to the last model, indus (proportion of non-retail business acres), dis (weighted mean of distances to five Boston employment centres), tax (full-value property-tax rate), black (proportion of blacks) and lstat (lower status of the population) seem to have a statistically significant relationship with crim (per capita crime rate) (p-value less than 0.05). This is very much consistent with the two earlier models. For example, when property tax rate increases by 1 unit, the average change in criminality is 0.025615 units, given the other variables do not change. 
 
-More non-retail business activities seems to be related to less criminality, which is quite understandable. Distance to employment centers seem to be negatively related, contrary to what was expected. Tax rate seems to be positively related. Contrary to what was expected, the proportion of blacks seems to be negatively related to criminality.This could be due to very small variance of the variable. Lower status of the population seems to be positively related, as expected.
+More non-retail business activities seems to be related to less criminality, which is quite understandable, because people have more jobs. Distance to employment centers seem to be negatively related, contrary to what was expected. Could it be that there is less opportunities for crime away from employment centres? Tax rate seems to be positively related, as expected. Could it be because people have less money to spend when the taxes are high and thus more inclined to breaking the law? Contrary to what was expected, the proportion of blacks seems to be negatively related to criminality.This could be due to very small variance of the variable. Lower status of the population seems to be positively related, as expected. This is quite intuitive. 
 
 Multiple R-squared of the model is 0.395 and  adjusted R-squared is 0.389 meaning that predictors can explain about 40 % of the variation in criminality which is very high. 
 
 Let's also visualize the outcomes of the linear regression more closely.
 
-```{r,warning=FALSE,echo=FALSE,message=FALSE}
+```{r,warning=FALSE,message=FALSE}
 library(relaimpo)
 library(car)
 library(captioner)
@@ -138,7 +146,7 @@ From this picture we can see that the tax variable (full-value property-tax rate
 
 ## Regression diagnostics
 
-```{r,warning=FALSE,echo=FALSE}
+```{r,warning=FALSE,message=FALSE}
 library(captioner)
 fig_nums<-captioner()
 fig_nums("mydata","Regression diagnostics")
