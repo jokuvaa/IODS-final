@@ -9,8 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Mika Tapio Vehka" />
+<meta name="author" content="Mika Tapio Vehka (mika.vehka@helsinki.fi)" />
 
+<meta name="date" content="2017-12-17" />
 
 <title>index.Rmd</title>
 
@@ -117,8 +118,8 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">index.Rmd</h1>
-<h4 class="author"><em>Mika Tapio Vehka</em></h4>
-<h4 class="date"><em>11 joulukuuta 2017</em></h4>
+<h4 class="author"><em>Mika Tapio Vehka (<a href="mailto:mika.vehka@helsinki.fi">mika.vehka@helsinki.fi</a>)</em></h4>
+<h4 class="date"><em>December 17, 2017</em></h4>
 
 </div>
 
@@ -280,7 +281,7 @@ summary(fit_3)</code></pre>
 ## Residual standard error: 6.724 on 500 degrees of freedom
 ## Multiple R-squared:  0.395,  Adjusted R-squared:  0.389 
 ## F-statistic: 65.29 on 5 and 500 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>According to the last model, indus (proportion of non-retail business acres), dis (weighted mean of distances to five Boston employment centres), tax (full-value property-tax rate), black (proportion of blacks) and lstat (lower status of the population) seem to have s statistically significant relationship with crim (per capita crime rate) (p-value better than 0.05). This is very much consistent with the two earlier models.</p>
+<p>According to the last model, indus (proportion of non-retail business acres), dis (weighted mean of distances to five Boston employment centres), tax (full-value property-tax rate), black (proportion of blacks) and lstat (lower status of the population) seem to have a statistically significant relationship with crim (per capita crime rate) (p-value less than 0.05). This is very much consistent with the two earlier models. For example, when property tax rate increases by 1 unit, the average change in criminality is 0.025615 units, given the other variables do not change.</p>
 <p>More non-retail business activities seems to be related to less criminality, which is quite understandable. Distance to employment centers seem to be negatively related, contrary to what was expected. Tax rate seems to be positively related. Contrary to what was expected, the proportion of blacks seems to be negatively related to criminality.This could be due to very small variance of the variable. Lower status of the population seems to be positively related, as expected.</p>
 <p>Multiple R-squared of the model is 0.395 and adjusted R-squared is 0.389 meaning that predictors can explain about 40 % of the variation in criminality which is very high.</p>
 <p>Let’s also visualize the outcomes of the linear regression more closely.</p>
